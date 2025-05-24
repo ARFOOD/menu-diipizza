@@ -1,1 +1,920 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>La Maison Wood’s – SOSO LE BOSS</title>
+  <!-- -- 1) librairie model-viewer : une seule fois par page -- -->
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
+<!-- -- 2) petit style pour le pop-up (rapide) -- -->
+<style>
+  .model-modal{
+    position:fixed;inset:0;background:#0006;display:none;align-items:center;justify-content:center;z-index:999;
+  }
+  .model-modal.open{display:flex;}
+  .model-modal-content{
+    background:#fff;border-radius:8px;max-width:90vw;max-height:90vh;padding:0.5rem;position:relative;
+  }
+  .model-modal-content button.close{
+    position:absolute;top:4px;right:8px;border:none;background:none;font-size:1.5rem;cursor:pointer;
+  }
+  model-viewer{width:90vw;max-width:600px;height:70vh;}
+</style>
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<!-- ===== MODAL 3D COMMUN À TOUTES LES CARTES ===== -->
+<div id="modelModal" class="model-modal" role="dialog" aria-modal="true" aria-label="Visualisation 3D">
+  <div class="model-modal-content">
+    <button class="close" aria-label="Fermer">✕</button>
+
+    <!-- Le model-viewer recevra la bonne source en JS -->
+    <model-viewer id="dishViewer"
+                  src=""
+                  ar
+                  camera-controls
+                  shadow-intensity="1"
+                  alt="Aperçu 3D">
+    </model-viewer>
+  </div>
+</div>
+
+<body>
+  <div id="nutri-modal" class="nutri-modal" style="display:none;">
+    <div class="nutri-modal-content">
+      <span class="nutri-close">&times;</span>
+      <div id="nutri-modal-body">
+        <!-- Contenu dynamique -->
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <img src="images/lgodii.png" alt="Logo" id="preloader-logo">
+  </div>
+
+  <header class="header-box">
+    <div class="site-header">
+      <img src="images/lg2.png" alt="LOGODIIMENU" class="header-logo">
+    </div>
+  
+    <div id="lang-toggle-wrapper" class="lang-dropdown" aria-expanded="false">
+      <button
+        id="lang-dropdown-toggle"
+        class="lang-summary"
+        type="button"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <span class="lang-flag" role="img" aria-label="Français">🇫🇷</span>
+        <span class="arrow">▼</span>
+      </button>
+      <ul id="lang-menu" class="lang-options" hidden>
+        <li>
+          <button class="lang-btn" type="button" data-lang="en">
+            <span class="flag-icon" role="img" aria-label="English">🇬🇧</span>
+          </button>
+        </li>
+        <li>
+          <button class="lang-btn" type="button" data-lang="es">
+            <span class="flag-icon" role="img" aria-label="Español">🇪🇸</span>
+          </button>
+        </li>
+        <li>
+          <button class="lang-btn" type="button" data-lang="it">
+            <span class="flag-icon" role="img" aria-label="Italiano">🇮🇹</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </header>
+    
+  
+  <!-- GRID DE CATÉGORIES -->
+  <nav id="menu-grid" class="menu-grid">
+    <a href="#boissons"        class="menu-card">
+      <img src="images/boissons.jpg" alt="Boissons">
+      <span data-i18n="category_boissons">Boissons</span>
+    </a>
+    <a href="#salades"         class="menu-card">
+      <img src="images/salades.jpg" alt="Salades">
+      <span data-i18n="category_salades">Salades</span>
+    </a>
+    <a href="#pizzas"          class="menu-card">
+      <img src="images/pizza.jpg" alt="Pizzas">
+      <span data-i18n="category_pizzas">Pizzas</span>
+    </a>
+    <a href="#menus-burger"    class="menu-card">
+      <img src="images/burger.jpg" alt="Menus Burger">
+      <span data-i18n="category_menus-burger">Menus Burger</span>
+    </a>
+    <a href="#accompagnements" class="menu-card">
+      <img src="images/accompagnements.jpg" alt="Accompagnements">
+      <span data-i18n="category_accompagnements">Accompagnements</span>
+    </a>
+    <a href="#menus-tacos"     class="menu-card">
+      <img src="images/tacos.jpg" alt="Menus Tacos">
+      <span data-i18n="category_menus-tacos">Menus Tacos</span>
+    </a>
+    <a href="#tex-mex"         class="menu-card">
+      <img src="images/texmew.jpg" alt="Tex Mex">
+      <span data-i18n="category_tex-mex">Tex Mex</span>
+    </a>
+    <a href="#desserts-glaces" class="menu-card">
+      <img src="images/desserts.jpg" alt="Desserts & Glaces">
+      <span data-i18n="category_desserts-glaces">Desserts & Glaces</span>
+    </a>
+    <a href="#menu-sandwiches" class="menu-card">
+      <img src="images/sandwiches.jpg" alt="Menu Sandwiches">
+      <span data-i18n="category_menu-sandwiches">Menu Sandwiches</span>
+    </a>
+  </nav>
+
+  <section id="boissons" class="carousel-section">
+    <button class="back-btn" aria-label="Retour">←</button>
+    <h2 class="menu-subtitle" data-i18n="category_boissons">Boissons</h2>
+    <div class="carousel-container">
+      <button class="carousel-btn prev-btn" aria-label="Slide précédent">‹</button>
+      <div class="menu-items">
+        <div class="menu-item-card">
+          <h3 data-i18n="item_boissons-coca_original_name">Coca-Cola goût original (Taille au choix)</h3>
+          <p data-i18n="item_boissons-coca_original_desc">Boisson rafraîchissante aux extraits de cola. Taille au choix.</p>
+          <span class="price">2,50 €</span>
+          <img src="images/coca-original.jpg" alt="Coca-Cola goût original">
+        </div>
+        <div class="menu-item-card">
+          <h3 data-i18n="item_boissons-coca_light_name">Coca-Cola light taste (Taille au choix)</h3>
+          <p data-i18n="item_boissons-coca_light_desc">Boisson rafraîchissante aux extraits de cola. Taille au choix.</p>
+          <span class="price">2,50 €</span>
+          <img src="images/coca-light.jpg" alt="Coca-Cola light taste">
+        </div>
+        <div class="menu-item-card">
+          <h3 data-i18n="item_boissons-coca_cherry_name">Coca-Cola Cherry (Taille au choix)</h3>
+          <p data-i18n="item_boissons-coca_cherry_desc">Boisson rafraîchissante aux extraits de cola. Taille au choix.</p>
+          <span class="price">2,50 €</span>
+          <img src="images/coca-cherry.jpg" alt="Coca-Cola Cherry">
+        </div>
+        <div class="menu-item-card">
+          <h3 data-i18n="item_boissons-fanta_orange_name">Fanta Orange (Taille au choix)</h3>
+          <p data-i18n="item_boissons-fanta_orange_desc">Boisson rafraîchissante au jus d'orange, avec sucre. Taille au choix.</p>
+          <span class="price">2,50 €</span>
+          <img src="images/fanta-orange.jpg" alt="Fanta Orange">
+        </div>
+        <div class="menu-item-card">
+          <h3 data-i18n="item_boissons-sprite_name">Sprite citron-citron vert</h3>
+          <p data-i18n="item_boissons-sprite_desc">Taille au choix.</p>
+          <span class="price">2,50 €</span>
+          <img src="images/sprite.jpg" alt="Sprite citron-citron vert">
+        </div>
+        <div class="menu-item-card">
+          <h3 data-i18n="item_boissons-orangina_name">Orangina</h3>
+          <p data-i18n="item_boissons-orangina_desc">Taille au choix.</p>
+          <span class="price">2,00 €</span>
+          <img src="images/orangina.jpg" alt="Orangina">
+        </div>
+        <div class="menu-item-card">
+          <h3 data-i18n="item_boissons-redbull_name">Red Bull</h3>
+          <p data-i18n="item_boissons-redbull_desc">25 cl.</p>
+          <span class="price">3,50 €</span>
+          <img src="images/red-bull.jpg" alt="Red Bull">
+        </div>
+        <div class="menu-item-card">
+          <h3 data-i18n="item_boissons-eau_plate_name">Eau plate</h3>
+          <p data-i18n="item_boissons-eau_plate_desc">50 cl.</p>
+          <span class="price">1,50 €</span>
+          <img src="images/eau-plate.jpg" alt="Eau plate">
+        </div>
+        <div class="menu-item-card">
+          <h3 data-i18n="item_boissons-eau_gazeuse_name">Eau gazeuse</h3>
+          <p data-i18n="item_boissons-eau_gazeuse_desc">50 cl.</p>
+          <span class="price">1,50 €</span>
+          <img src="images/eau-gazeuse.jpg" alt="Eau gazeuse">
+        </div>
+      </div>
+      <button class="carousel-btn next-btn" aria-label="Slide suivant">›</button>
+    </div>
+  </section>
+  
+  <!-- SECTION : SALADES -->
+  <section id="salades" class="carousel-section">
+    <button class="back-btn" aria-label="Retour">←</button>
+    <h2 class="menu-subtitle" data-i18n="category_salades">Salades</h2>
+    <div class="carousel-container">
+      <button class="carousel-btn prev-btn" aria-label="Slide précédent">‹</button>
+      <div class="menu-items">
+        <!-- Ligne 1 -->
+        <div class="menu-item-card">
+          <img src="images/salades/sl1.png" alt="Salade niçoise">
+        
+          <!-- "i" nutritionnel + titre -->
+          <h3 data-i18n="item_salades-nicoise_name">
+            Salade niçoise
+            <span class="info-icon" data-plat="salade_nicoise" title="Infos nutritionnelles">&#9432;</span>
+          </h3>
+        
+          <p data-i18n="item_salades-nicoise_desc">
+            Salade mixte, tomates cerises, anchois, thon, poivrons.
+          </p>
+        
+          <span class="price">9,00 €</span>
+        
+          <!-- !! Le bouton porte maintenant la source du modèle dans data-model -->
+          <button class="view-3d-btn"
+                  data-model="./models/painperdu.usdz">
+                  Voir en 3D
+          </button>
+        </div>
+        
+        
+        <div class="menu-item-card">
+          <img src="images/salades/campagnarde.png" alt="Salade campagnarde">
+          <h3 data-i18n="item_salades-campagnarde_name">
+            Salade campagnarde
+            <span class="info-icon" data-plat="salade_campagnarde" title="Infos nutritionnelles">i</span>
+          </h3>
+          <p data-i18n="item_salades-campagnarde_desc">Salade mixte, tomates cerises, chèvre, lardons et noix.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/salades/césar.png" alt="Salade César">
+          <h3 data-i18n="item_salades-cesar_name">
+            Salade César
+            <span class="info-icon" data-plat="salade_cesar" title="Infos nutritionnelles">i</span>
+          </h3>
+          <p data-i18n="item_salades-cesar_desc">Salade mixte, poulet, tomates cerises, parmesan, croûtons.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <!-- Ligne 2 -->
+        <div class="menu-item-card">
+          <img src="images/salades/grecque.png" alt="Salade tomates et mozzarella">
+          <h3 data-i18n="item_salades-tomates_mozza_name">
+            Salade tomates et mozzarella
+            <span class="info-icon" data-plat="salade_tomates_mozza" title="Infos nutritionnelles">i</span>
+          </h3>
+          <p data-i18n="item_salades-tomates_mozza_desc">Roquette, tomates, mozzarella et huile de basilic.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/salade-nicoise2.jpg" alt="Salade tomatée revisitée">
+          <h3 data-i18n="item_salades-tomates_mozza_name">
+            Salade tomates et mozzarella
+            <span class="info-icon" data-plat="salade_tomates_mozza" title="Infos nutritionnelles">i</span>
+          </h3>
+          <p data-i18n="item_salades-tomates_mozza_desc">Roquette, tomates, mozzarella et huile de basilic.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/salade-cesar2.jpg" alt="Salade César revisitée">
+          <h3 data-i18n="item_salades-cesar_revisitee_name">
+            Salade César revisitée
+            <span class="info-icon" data-plat="salade_cesar_revisitee" title="Infos nutritionnelles">i</span>
+          </h3>
+          <p data-i18n="item_salades-cesar_revisitee_desc">Salade mixte, poulet grillé, copeaux de parmesan, croûtons maison.</p>
+          <span class="price">10,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+      </div>
+      <button class="carousel-btn next-btn" aria-label="Slide suivant">›</button>
+    </div>
+  </section>
+  
+  
+
+  <!-- SECTION : PIZZAS -->
+  <section id="pizzas" class="carousel-section">
+    <button class="back-btn" aria-label="Retour">←</button>
+    <h2 class="menu-subtitle" data-i18n="category_pizzas">Pizzas</h2>
+    <div class="carousel-container">
+      <button class="carousel-btn prev-btn" aria-label="Slide précédent">‹</button>
+      <div class="menu-items">
+        <!-- Ligne 1 -->
+        <div class="menu-item-card">
+          <img src="images/pizzas/chevre.png" alt="Pizza chèvre miel">
+          <h3 data-i18n="item_pizzas-chevre_miel_name">Pizza chèvre miel</h3>
+          <p data-i18n="item_pizzas-chevre_miel_desc">Base crème fraîche, fromage chèvre et miel. Taille au choix.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizzas/paysanne.png" alt="Pizza paysanne">
+          <h3 data-i18n="item_pizzas-paysanne_name">Pizza paysanne</h3>
+          <p data-i18n="item_pizzas-paysanne_desc">Base crème fraîche, mozzarella, lardons, oignons, œuf, olives et origan. Taille au choix.</p>
+          <span class="price">8,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizzas/diip.png" alt="Pizza Dii">
+          <h3 data-i18n="item_pizzas-dii_name">Pizza Dii</h3>
+          <p data-i18n="item_pizzas-dii_desc">Base sauce tomate, mozzarella, jambon, roquette, tomates cerises.</p>
+          <span class="price">11,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <!-- Ligne 2 -->
+        <div class="menu-item-card">
+          <img src="images/pizzas/kebab.png" alt="Pizza suprême kebab">
+          <h3 data-i18n="item_pizzas-supreme_kebab_name">Pizza suprême kebab</h3>
+          <p data-i18n="item_pizzas-supreme_kebab_desc">Base crème fraîche, mozzarella, kebab, tomates fraîches, oignons, sauce blanche, olives et origan.</p>
+          <span class="price">10,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizzas/nicoise-Photoroom.png" alt="Pizza niçoise">
+          <h3 data-i18n="item_pizzas-nicoise_name">Pizza niçoise</h3>
+          <p data-i18n="item_pizzas-nicoise_desc">Base sauce tomate, mozzarella, thon, oignons, poivrons, œuf et olives.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizzas/chorizo-Photoroom.png" alt="Pizza chorizo">
+          <h3 data-i18n="item_pizzas-chorizo_name">Pizza chorizo</h3>
+          <p data-i18n="item_pizzas-chorizo_desc">Base sauce tomate, mozzarella, chorizo, champignons.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <!-- Ligne 3 -->
+        <div class="menu-item-card">
+          <img src="images/pizzas/texmex.png" alt="Pizza Tex Mex">
+          <h3 data-i18n="item_pizzas-texmex_name">Pizza Tex Mex</h3>
+          <p data-i18n="item_pizzas-texmex_desc">Base sauce tomate, mozzarella, chorizo, viande hâchée, poivrons.</p>
+          <span class="price">9,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizzas/chicke.png" alt="Pizza chicken">
+          <h3 data-i18n="item_pizzas-chicken_name">Pizza chicken</h3>
+          <p data-i18n="item_pizzas-chicken_desc">Base sauce tomate, mozzarella, poulet, champignons, oignons et origan.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizzas/fruitsdemer.png" alt="Pizza fruits de mer">
+          <h3 data-i18n="item_pizzas-fruits_de_mer_name">Pizza fruits de mer</h3>
+          <p data-i18n="item_pizzas-fruits_de_mer_desc">Base sauce tomate, mozzarella, fruits de mer, persillade et origan.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <!-- Ligne 4 -->
+        <div class="menu-item-card">
+          <img src="images/pizzas/kebab 2.png" alt="Pizza kebab">
+          <h3 data-i18n="item_pizzas-kebab_name">Pizza kebab</h3>
+          <p data-i18n="item_pizzas-kebab_desc">Base sauce tomate, mozzarella, kebab, oignons et origan.</p>
+          <span class="price">8,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizza-thon.jpg" alt="Pizza thon">
+          <h3 data-i18n="item_pizzas-thon_name">Pizza thon</h3>
+          <p data-i18n="item_pizzas-thon_desc">Base sauce tomate, mozzarella, thon et origan.</p>
+          <span class="price">8,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizza-cannibale.jpg" alt="Pizza cannibale">
+          <h3 data-i18n="item_pizzas-cannibale_name">Pizza cannibale</h3>
+          <p data-i18n="item_pizzas-cannibale_desc">Base sauce tomate, mozzarella, viande hâchée, oignons et origan.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <!-- Ligne 5 -->
+        <div class="menu-item-card">
+          <img src="images/pizza-vegetarienne.jpg" alt="Pizza végétarienne">
+          <h3 data-i18n="item_pizzas-vegetarienne_name">Pizza végétarienne</h3>
+          <p data-i18n="item_pizzas-vegetarienne_desc">Base sauce tomate, mozzarella, artichauts et champignons.</p>
+          <span class="price">8,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizza-saumon.jpg" alt="Pizza saumon">
+          <h3 data-i18n="item_pizzas-saumon_name">Pizza saumon</h3>
+          <p data-i18n="item_pizzas-saumon_desc">Base crème fraîche, mozzarella, saumon et olives.</p>
+          <span class="price">8,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizza-napoli.jpg" alt="Pizza Napoli">
+          <h3 data-i18n="item_pizzas-napoli_name">Pizza Napoli</h3>
+          <p data-i18n="item_pizzas-napoli_desc">Base sauce tomate, mozzarella, anchois et câpres.</p>
+          <span class="price">8,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <!-- Ligne 6 -->
+        <div class="menu-item-card">
+          <img src="images/pizza-gorgonzola.jpg" alt="Pizza gorgonzola">
+          <h3 data-i18n="item_pizzas-gorgonzola_name">Pizza gorgonzola</h3>
+          <p data-i18n="item_pizzas-gorgonzola_desc">Base crème fraîche, mozzarella, jambon et gorgonzola.</p>
+          <span class="price">8,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizza-4-fromages.jpg" alt="Pizza 4 fromages">
+          <h3 data-i18n="item_pizzas-4_fromages_name">Pizza 4 fromages</h3>
+          <p data-i18n="item_pizzas-4_fromages_desc">Base sauce tomate, mozzarella et 4 fromages.</p>
+          <span class="price">8,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizza-calzone.jpg" alt="Pizza calzone">
+          <h3 data-i18n="item_pizzas-calzone_name">Pizza calzone</h3>
+          <p data-i18n="item_pizzas-calzone_desc">Base sauce tomate, mozzarella, champignons et jambon.</p>
+          <span class="price">8,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <!-- Ligne 7 -->
+        <div class="menu-item-card">
+          <img src="images/pizza-4-saisons.jpg" alt="Pizza 4 saisons">
+          <h3 data-i18n="item_pizzas-4_saisons_name">Pizza 4 saisons</h3>
+          <p data-i18n="item_pizzas-4_saisons_desc">Base sauce tomate, mozzarella, jambon et champignons.</p>
+          <span class="price">8,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizza-reine.jpg" alt="Pizza Reine">
+          <h3 data-i18n="item_pizzas-reine_name">Pizza Reine</h3>
+          <p data-i18n="item_pizzas-reine_desc">Base sauce tomate, mozzarella, jambon et champignons.</p>
+          <span class="price">8,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/pizza-margherita.jpg" alt="Pizza Margherita">
+          <h3 data-i18n="item_pizzas-margherita_name">Pizza Margherita</h3>
+          <p data-i18n="item_pizzas-margherita_desc">Base sauce tomate, mozzarella, olives et origan.</p>
+          <span class="price">7,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+      </div>
+      <button class="carousel-btn next-btn" aria-label="Slide suivant">›</button>
+    </div>
+  </section>
+  
+
+  <!-- SECTION : MENUS BURGER -->
+  <section id="menus-burger" class="carousel-section">
+    <button class="back-btn" aria-label="Retour">←</button>
+    <h2 class="menu-subtitle" data-i18n="category_menus-burger">Menus Burger</h2>
+  
+    <!-- Toggle Avec menu / Sans menu -->
+    <div class="sandwich-toggle">
+      <button class="sandwich-toggle-btn active" data-filter="avec-menu">Avec menu</button>
+      <button class="sandwich-toggle-btn" data-filter="sans-menu">Sans menu</button>
+    </div>
+  
+    <div class="carousel-container">
+      <button class="carousel-btn prev-btn" aria-label="Slide précédent">‹</button>
+      <div class="menu-items">
+        <!-- AVEC MENU -->
+        <div class="menu-item-card" data-type="avec-menu">
+          <img src="images/burgers/menu/menuchicken.png" alt="Menu chicken burger">
+          <h3 data-i18n="item_menus-burger-menu_chicken_burger_name">Menu chicken burger</h3>
+          <p data-i18n="item_menus-burger-menu_chicken_burger_desc">Poulet pané, pain boulanger, salade, tomate, oignons, œuf et cheddar. Servi avec frites.</p>
+          <span class="price">12,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="avec-menu">
+          <img src="images/burgers/menu/menudouble.png" alt="Menu double cheeseburger">
+          <h3 data-i18n="item_menus-burger-menu_double_cheeseburger_name">Menu double cheeseburger</h3>
+          <p data-i18n="item_menus-burger-menu_double_cheeseburger_desc">Double steak boucher, pain boulanger, salade, tomate, oignons, cheddar et cornichons. Servi avec frites.</p>
+          <span class="price">12,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="avec-menu">
+          <img src="images/burger-cheese.jpg" alt="Menu cheeseburger">
+          <h3 data-i18n="item_menus-burger-menu_cheeseburger_name">Menu cheeseburger</h3>
+          <p data-i18n="item_menus-burger-menu_cheeseburger_desc">Steak boucher, pain boulanger, salade, tomate, oignons, cheddar. Servi avec frites.</p>
+          <span class="price">10,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="avec-menu">
+          <img src="images/burger-selfish.jpg" alt="Menu selfish burger">
+          <h3 data-i18n="item_menus-burger-menu_selfish_burger_name">Menu selfish burger</h3>
+          <p data-i18n="item_menus-burger-menu_selfish_burger_desc">Filet de poisson pané, pain boulanger, salade, tomate, oignons et cheddar. Servi avec frites.</p>
+          <span class="price">12,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="avec-menu">
+          <img src="images/burger-veggie.jpg" alt="Menu veggie burger">
+          <h3 data-i18n="item_menus-burger-menu_veggie_burger_name">Menu veggie burger</h3>
+          <p data-i18n="item_menus-burger-menu_veggie_burger_desc">Galette de légumes, pain boulanger, salade, tomate, mozzarella et oignons rouges. Servi avec frites.</p>
+          <span class="price">12,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="avec-menu">
+          <img src="images/burger-chevre-miel.jpg" alt="Menu chèvre miel burger">
+          <h3 data-i18n="item_menus-burger-menu_chevre_miel_burger_name">Menu chèvre miel burger</h3>
+          <p data-i18n="item_menus-burger-menu_chevre_miel_burger_desc">Steak boucher, pain boulanger, chèvre, miel et salade. Servi avec frites et boisson.</p>
+          <span class="price">12,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="avec-menu">
+          <img src="images/burger-forestiere.jpg" alt="Menu forestière burger">
+          <h3 data-i18n="item_menus-burger-menu_forestiere_burger_name">Menu forestière burger</h3>
+          <p data-i18n="item_menus-burger-menu_forestiere_burger_desc">Steak boucher, pain boulanger, salade, tomates, oignons confits, mozzarella et champignons. Servi avec frites.</p>
+          <span class="price">13,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="avec-menu">
+          <img src="images/burger-montagnard.jpg" alt="Menu montagnard burger">
+          <h3 data-i18n="item_menus-burger-menu_montagnard_burger_name">Menu montagnard burger</h3>
+          <p data-i18n="item_menus-burger-menu_montagnard_burger_desc">Steak boucher, pain boulanger, salade, tomate, bacon, raclette, oignons et galette de pommes de terre.</p>
+          <span class="price">14,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="avec-menu">
+          <img src="images/burger-dii.jpg" alt="Menu DII burger">
+          <h3 data-i18n="item_menus-burger-menu_dii_burger_name">Menu DII burger</h3>
+          <p data-i18n="item_menus-burger-menu_dii_burger_desc">Steak boucher, pain boulanger, mozzarella, œuf, avocat, roquette, tomate et oignons rouges. Servi avec frites.</p>
+          <span class="price">15,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+  
+        <!-- SANS MENU -->
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/burgers/Raclette.png" alt="French burger">
+          <h3 data-i18n="item_menus-burger-french_burger_name">French burger</h3>
+          <p data-i18n="item_menus-burger-french_burger_desc">Steak boucher, pain boulanger, raclette, salade, pommes de terre, tomate et oignons.</p>
+          <span class="price">10,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/burgers/Cheese.png" alt="Cheese burger">
+          <h3 data-i18n="item_menus-burger-cheese_burger_name">Cheese burger</h3>
+          <p data-i18n="item_menus-burger-cheese_burger_desc">Steak boucher, pain boulanger, salade, tomate, oignons, cheddar et cornichons.</p>
+          <span class="price">7,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/burgers/Double cheese.png" alt="Double cheese burger">
+          <h3 data-i18n="item_menus-burger-double_cheese_burger_name">Double cheese burger</h3>
+          <p data-i18n="item_menus-burger-double_cheese_burger_desc">Double steak boucher, pain boulanger, salade, tomate et oignons.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/burgers/Poulet.png" alt="Chicken burger">
+          <h3 data-i18n="item_menus-burger-chicken_burger_name">Chicken burger</h3>
+          <p data-i18n="item_menus-burger-chicken_burger_desc">Poulet pané, pain boulanger, salade, tomate, oignons, œuf et cheddar.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/burgers/Chèvre .png" alt="Chèvre burger">
+          <h3 data-i18n="item_menus-burger-chevre_burger_name">Chèvre burger</h3>
+          <p data-i18n="item_menus-burger-chevre_burger_desc">Steak boucher, pain boulanger, chèvre, miel et salade.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/burgers/Fish.png" alt="Selfish burger">
+          <h3 data-i18n="item_menus-burger-selfish_burger_name">Selfish burger</h3>
+          <p data-i18n="item_menus-burger-selfish_burger_desc">Filet de poisson pané, pain boulanger, salade, tomate, oignons et cheddar.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/burgers/Veggie 2.png" alt="Veggie burger">
+          <h3 data-i18n="item_menus-burger-veggie_burger_name">Veggie burger</h3>
+          <p data-i18n="item_menus-burger-veggie_burger_desc">Galette de légumes, pain boulanger, salade, tomate, mozzarella et oignons rouges.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/burgers/Avec mozzarella .png" alt="Forestière burger">
+          <h3 data-i18n="item_menus-burger-forestiere_burger_name">Forestière burger</h3>
+          <p data-i18n="item_menus-burger-forestiere_burger_desc">Steak boucher, pain boulanger, salade, tomate, oignons confits, mozzarella et champignons.</p>
+          <span class="price">10,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/burger-montagnard-only.jpg" alt="Montagnard burger">
+          <h3 data-i18n="item_menus-burger-montagnard_burger_name">Montagnard burger</h3>
+          <p data-i18n="item_menus-burger-montagnard_burger_desc">Steak boucher, pain boulanger, salade, tomate, bacon.</p>
+          <span class="price">10,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/burgers/Avocat.png" alt="DII burger">
+          <h3 data-i18n="item_menus-burger-dii_burger_name">DII burger</h3>
+          <p data-i18n="item_menus-burger-dii_burger_desc">Steak boucher, pain boulanger, mozzarella, œuf et avocat.</p>
+          <span class="price">12,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+      </div>
+      <button class="carousel-btn next-btn" aria-label="Slide suivant">›</button>
+    </div>
+  </section>
+  
+
+  <!-- SECTION : ACCOMPAGNEMENTS -->
+  <section id="accompagnements" class="carousel-section">
+    <button class="back-btn" aria-label="Retour">←</button>
+    <h2 class="menu-subtitle" data-i18n="category_accompagnements">Accompagnements</h2>
+    <div class="carousel-container">
+      <button class="carousel-btn prev-btn" aria-label="Slide précédent">‹</button>
+      <div class="menu-items">
+        <div class="menu-item-card">
+          <img src="images/accompagnements/frites.png" alt="Frites cheddar">
+          <h3 data-i18n="item_accompagnements-frites_cheddar_name">Frites cheddar</h3>
+          <p data-i18n="item_accompagnements-frites_cheddar_desc">Pommes de terre maison, cheddar fondant.</p>
+          <span class="price">5,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/accompagnements/potatoes.png" alt="Potatoes">
+          <h3 data-i18n="item_accompagnements-potatoes_name">Potatoes</h3>
+          <p data-i18n="item_accompagnements-potatoes_desc">Pommes de terre rôties aux herbes.</p>
+          <span class="price">4,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/frites-maison.jpg" alt="Frites maison">
+          <h3 data-i18n="item_accompagnements-frites_maison_name">Frites maison</h3>
+          <p data-i18n="item_accompagnements-frites_maison_desc">Frites coupées main, croustillantes à souhait.</p>
+          <span class="price">3,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+      </div>
+      <button class="carousel-btn next-btn" aria-label="Slide suivant">›</button>
+    </div>
+  </section>
+  
+  <!-- SECTION : MENUS TACOS -->
+  <section id="menus-tacos" class="carousel-section">
+    <button class="back-btn" aria-label="Retour">←</button>
+    <h2 class="menu-subtitle" data-i18n="category_menus-tacos">Menus Tacos</h2>
+  
+    <!-- Toggle Avec menu / Sans menu -->
+    <div class="sandwich-toggle">
+      <button class="sandwich-toggle-btn active" data-filter="avec-menu">Avec menu</button>
+      <button class="sandwich-toggle-btn"        data-filter="sans-menu">Sans menu</button>
+    </div>
+  
+    <div class="carousel-container">
+      <button class="carousel-btn prev-btn" aria-label="Slide précédent">‹</button>
+      <div class="menu-items">
+        <!-- AVEC MENU -->
+        <div class="menu-item-card" data-type="avec-menu">
+          <img src="images/tacos/tmenu1.png" alt="Menu tacos 1 viande">
+          <h3 data-i18n="item_menus-tacos-menu_tacos_1_viande_name">Menu tacos 1 viande</h3>
+          <p data-i18n="item_menus-tacos-menu_tacos_1_viande_desc">1 viande + 1 sauce. Servi avec frites + boisson 33 cl.</p>
+          <span class="price">11,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="avec-menu">
+          <img src="images/tacos/tmenu2.png" alt="Menu tacos 2 viandes">
+          <h3 data-i18n="item_menus-tacos-menu_tacos_2_viandes_name">Menu tacos 2 viandes</h3>
+          <p data-i18n="item_menus-tacos-menu_tacos_2_viandes_desc">2 viandes + 1 sauce. Servi avec frites + boisson 33 cl.</p>
+          <span class="price">13,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="avec-menu">
+          <img src="images/tacos-3-viandes.jpg" alt="Menu tacos 3 viandes">
+          <h3 data-i18n="item_menus-tacos-menu_tacos_3_viandes_name">Menu tacos 3 viandes</h3>
+          <p data-i18n="item_menus-tacos-menu_tacos_3_viandes_desc">3 viandes + 1 sauce. Servi avec frites + boisson 33 cl.</p>
+          <span class="price">15,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <!-- SANS MENU -->
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/tacos/tacos1.png" alt="Tacos 1 viande">
+          <h3 data-i18n="item_menus-tacos-tacos_1_viande_name">Tacos 1 viande</h3>
+          <p data-i18n="item_menus-tacos-tacos_1_viande_desc">1 viande au choix.</p>
+          <span class="price">8,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/tacos/tacos2.png" alt="Tacos 2 viandes">
+          <h3 data-i18n="item_menus-tacos-tacos_2_viandes_name">Tacos 2 viandes</h3>
+          <p data-i18n="item_menus-tacos-tacos_2_viandes_desc">2 viandes au choix.</p>
+          <span class="price">10,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="sans-menu">
+          <img src="images/tacos-3-viandes.jpg" alt="Tacos 3 viandes">
+          <h3 data-i18n="item_menus-tacos-tacos_3_viandes_name">Tacos 3 viandes</h3>
+          <p data-i18n="item_menus-tacos-tacos_3_viandes_desc">3 viandes au choix.</p>
+          <span class="price">12,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+      </div>
+      <button class="carousel-btn next-btn" aria-label="Slide suivant">›</button>
+    </div>
+  </section>
+  
+
+  <section id="tex-mex" class="carousel-section">
+    <button class="back-btn" aria-label="Retour">←</button>
+    <h2 class="menu-subtitle" data-i18n="category_tex-mex">Tex Mex</h2>
+    <div class="carousel-container">
+      <button class="carousel-btn prev-btn" aria-label="Slide précédent">‹</button>
+      <div class="menu-items">
+        <div class="menu-item-card">
+          <img src="images/texmex/tapas.png" alt="Mix tapas">
+          <h3 data-i18n="item_tex-mex-mix_tapas_name">Mix tapas</h3>
+          <p data-i18n="item_tex-mex-mix_tapas_desc">2 wings, 4 nuggets, 2 tenders, 4 onion rings, 1 sauce au choix et 4 sticks mozzarella.</p>
+          <span class="price">15,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/texmex/stick.png" alt="Stick mozza">
+          <h3 data-i18n="item_tex-mex-stick_mozza_name">Stick mozza</h3>
+          <p data-i18n="item_tex-mex-stick_mozza_desc">Sauce au choix, 5 pièces.</p>
+          <span class="price">9,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/texmex/tenders.png" alt="Tenders">
+          <h3 data-i18n="item_tex-mex-tenders_name">Tenders</h3>
+          <p data-i18n="item_tex-mex-tenders_desc">Sauce au choix, 4 pièces.</p>
+          <span class="price">8,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/mini-camembert-pane.jpg" alt="Mini camembert pané">
+          <h3 data-i18n="item_tex-mex-mini_camembert_pane_name">Mini camembert pané</h3>
+          <p data-i18n="item_tex-mex-mini_camembert_pane_desc">Sauce au choix, 5 pièces.</p>
+          <span class="price">6,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/onion-rings.jpg" alt="Onion rings">
+          <h3 data-i18n="item_tex-mex-onion_rings_name">Onion rings</h3>
+          <p data-i18n="item_tex-mex-onion_rings_desc">Sauce au choix, 5 pièces.</p>
+          <span class="price">6,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/wings.jpg" alt="Wings">
+          <h3 data-i18n="item_tex-mex-wings_name">Wings</h3>
+          <p data-i18n="item_tex-mex-wings_desc">Sauce au choix, 5 pièces.</p>
+          <span class="price">6,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/nuggets.jpg" alt="Nuggets">
+          <h3 data-i18n="item_tex-mex-nuggets_name">Nuggets</h3>
+          <p data-i18n="item_tex-mex-nuggets_desc">Sauce au choix, 5 pièces.</p>
+          <span class="price">6,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/frite-maison.jpg" alt="Frite maison">
+          <h3 data-i18n="item_tex-mex-frite_maison_name">Frite maison</h3>
+          <p data-i18n="item_tex-mex-frite_maison_desc">Petite portion.</p>
+          <span class="price">3,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+      </div>
+      <button class="carousel-btn next-btn" aria-label="Slide suivant">›</button>
+    </div>
+  </section>
+  
+  
+
+  <section id="desserts-glaces" class="carousel-section">
+    <button class="back-btn" aria-label="Retour">←</button>
+    <h2 class="menu-subtitle" data-i18n="category_desserts-glaces">Desserts &amp; Glaces</h2>
+    <div class="carousel-container">
+      <button class="carousel-btn prev-btn" aria-label="Slide précédent">‹</button>
+      <div class="menu-items">
+        <div class="menu-item-card">
+          <img src="images/desserts/brownie.png" alt="Brownie">
+          <h3 data-i18n="item_desserts-glaces-brownie_name">Brownie</h3>
+          <p data-i18n="item_desserts-glaces-brownie_desc">Gâteau fondant au chocolat et noix « gâteau emblématique de l'Amérique ».</p>
+          <span class="price">4,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/desserts/nut.png" alt="Pizza Nutella">
+          <h3 data-i18n="item_desserts-glaces-pizza_nutella_name">Pizza Nutella</h3>
+          <p data-i18n="item_desserts-glaces-pizza_nutella_desc"></p>
+          <span class="price">7,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/desserts/tiramisu.png" alt="Tiramisu">
+          <h3 data-i18n="item_desserts-glaces-tiramisu_name">Tiramisu</h3>
+          <p data-i18n="item_desserts-glaces-tiramisu_desc">Dessert fondant à base de mascarpone, biscuit, café…</p>
+          <span class="price">4,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/desserts/cheesecake.png" alt="Cheesecake">
+          <h3 data-i18n="item_desserts-glaces-cheesecake_name">Cheesecake</h3>
+          <p data-i18n="item_desserts-glaces-cheesecake_desc">Dessert sucré au cream cheese sur un lit de miettes…</p>
+          <span class="price">4,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/tarte-daim.jpg" alt="Tarte au Daim">
+          <h3 data-i18n="item_desserts-glaces-tarte_au_daim_name">Tarte au Daim</h3>
+          <p data-i18n="item_desserts-glaces-tarte_au_daim_desc">Tarte sablée, crème aux Daims et ganache chocolat.</p>
+          <span class="price">4,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/muffin.jpg" alt="Muffin">
+          <h3 data-i18n="item_desserts-glaces-muffin_name">Muffin</h3>
+          <p data-i18n="item_desserts-glaces-muffin_desc">Petit gâteau moelleux anglo-saxon.</p>
+          <span class="price">4,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card">
+          <img src="images/haagen-dazs.jpg" alt="Häagen-Dazs">
+          <h3 data-i18n="item_desserts-glaces-haagen_dazs_name">Häagen-Dazs</h3>
+          <p data-i18n="item_desserts-glaces-haagen_dazs_desc">Taille au choix.</p>
+          <span class="price">4,00 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+      </div>
+      <button class="carousel-btn next-btn" aria-label="Slide suivant">›</button>
+    </div>
+  </section>
+  
+  
+
+  <!-- SECTION : MENU SANDWICHES -->
+  <section id="menu-sandwiches" class="carousel-section">
+    <button class="back-btn" aria-label="Retour">←</button>
+    <h2 class="menu-subtitle" data-i18n="category_menu-sandwiches">Menu Sandwiches</h2>
+  
+    <div class="sandwich-toggle">
+      <button class="sandwich-toggle-btn active" data-filter="chaud">Chaud</button>
+      <button class="sandwich-toggle-btn" data-filter="froid">Froid</button>
+    </div>
+  
+    <div class="carousel-container">
+      <button class="carousel-btn prev-btn" aria-label="Slide précédent">‹</button>
+      <div class="menu-items">
+        <!-- Chaud -->
+        <div class="menu-item-card" data-type="chaud">
+          <img src="images/sandwich/clubsandwich.png" alt="Club Sandwich">
+          <h3 data-i18n="item_menu-sandwiches-club_sandwich_name">Club Sandwich</h3>
+          <p data-i18n="item_menu-sandwiches-club_sandwich_desc">Poulet, bacon, salade, tomate, sauce mayo.</p>
+          <span class="price">9,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="chaud">
+          <img src="images/sandwich/paninipoulet.png" alt="Panini Poulet">
+          <h3 data-i18n="item_menu-sandwiches-panini_poulet_name">Panini Poulet</h3>
+          <p data-i18n="item_menu-sandwiches-panini_poulet_desc">Poulet grillé, mozzarella, pesto.</p>
+          <span class="price">8,90 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <!-- Froid -->
+        <div class="menu-item-card" data-type="froid">
+          <img src="images/sandwich/jambonbeurre.png" alt="Sandwich Jambon Beurre">
+          <h3 data-i18n="item_menu-sandwiches-sandwich_jambon_beurre_name">Sandwich Jambon Beurre</h3>
+          <p data-i18n="item_menu-sandwiches-sandwich_jambon_beurre_desc">Jambon blanc, beurre, cornichons.</p>
+          <span class="price">4,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+        <div class="menu-item-card" data-type="froid">
+          <img src="images/sandwich/veggie.png" alt="Sandwich Veggie">
+          <h3 data-i18n="item_menu-sandwiches-sandwich_veggie_name">Sandwich Veggie</h3>
+          <p data-i18n="item_menu-sandwiches-sandwich_veggie_desc">Légumes grillés, fromage frais, roquette.</p>
+          <span class="price">5,50 €</span>
+          <button class="view-3d-btn">Voir en 3D</button>
+        </div>
+      </div>
+      <button class="carousel-btn next-btn" aria-label="Slide suivant">›</button>
+    </div>
+  </section>
+  
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>Votre avis compte :</p>
+    <div class="payments"><!-- Icônes CB, Visa… --></div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  
+  <script>
+    // --- ouverture / fermeture du modal 3D ------------------------------
+    const modal    = document.getElementById('modelModal');
+    const viewer   = document.getElementById('dishViewer');
+    const closeBtn = modal.querySelector('.close');
+  
+    // a) clic sur "Voir en 3D"
+    document.querySelectorAll('.view-3d-btn').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        const src = btn.dataset.model;          // récupère le chemin défini sur le bouton
+        if(src){
+          viewer.src = src;
+          modal.classList.add('open');
+        }
+      });
+    });
+  
+    // b) fermeture
+    closeBtn.addEventListener('click', ()=> modal.classList.remove('open'));
+    modal.addEventListener('click',       e=>{
+      if(e.target===modal) modal.classList.remove('open');
+    });
+  </script>
+  
